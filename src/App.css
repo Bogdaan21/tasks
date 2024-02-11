@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+ul {
+  padding: 0px;
+}
+
+li {
+  list-style: none;
+  padding: 5px 0px;
+}
+
+button {
+  margin: 0px 10px;
+}
