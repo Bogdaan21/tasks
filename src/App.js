@@ -2,7 +2,8 @@ import "./App.scss";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Modal from "./page/TaskModal";
-import ReactPaginate from "react-paginate";
+import TaskForm from "./page/TaskForm";
+import TaskList from "./page/TaskList";
 
 function App() {
   const [tasks, setTask] = useState([]);
@@ -27,10 +28,7 @@ function App() {
 
   const [sortByTitle, setSortByTitle] = useState(false);
 
-  const tasksPerPage = 3;
-  const pagesVisited = currentPage * tasksPerPage;
-
-  const pageCount = Math.ceil(tasks.length / tasksPerPage);
+  const [pageCount, setPageCount] = useState();
 
   const changePage = ({ selected }) => {
     setCurrentPage(selected);
@@ -46,16 +44,26 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get("http://localhost:8000/tasks");
+      const response = await axios.get("http://localhost:8000/tasks", {
+        params: {
+          _page: currentPage + 1,
+          _per_page: 3,
+        },
+      });
+      const pageCount = Math.ceil(response.data.pages);
+      setPageCount(pageCount);
 
-      const sortedTasks = sortByTitle
-        ? response.data.slice().sort((a, b) => a.task.localeCompare(b.task))
-        : response.data;
+      const tasksData = response.data.data || response.data;
+
+      const sortedTasks = sortByTitle ? tasksData.slice().sort((a, b) => a.task.localeCompare(b.task)) : tasksData;
 
       setTask(sortedTasks);
+
+      console.log(sortedTasks)
     };
+
     fetchData();
-  }, [updateTask, sortByTitle]);
+  }, [updateTask, sortByTitle, currentPage]);
 
   const addTask = async (e) => {
     e.preventDefault();
@@ -105,53 +113,22 @@ function App() {
   return (
     <>
       <div className="container">
-        <h1>Task</h1>
-        <div className="box">
-
-          <form onSubmit={addTask}>
-            <input type="text" placeholder="Dodaj task" value={note} onChange={(e) => setNote(e.target.value)} />
-            <textarea placeholder="Dodaj detaljan opis" value={content} onChange={(e) => setContent(e.target.value)} />
-            <button className="bg-primary" type="submit">
-              Dodaj task
-            </button>
-          </form>
-        </div>
-        <div className="box">
-        <button onClick={sortByTitleHandler}>Sortiraj po nazivu</button>
-          <ul>
-            {tasks.slice(pagesVisited, pagesVisited + tasksPerPage).map((task, index) => (
-              <li className="task_list" key={index}>
-                <h3>
-                  <span className="text-primary">Title: </span>
-                  {task.task}
-                </h3>
-                <p>
-                  <span className="text-primary">Contect: </span>
-                  {task.sadrzaj}
-                </p>
-                <div className="button_mood">
-                  <button className="bg-primary" onClick={() => editTask(task.id)}>
-                    Izmijeni
-                  </button>
-                  <button className="bg-danger" onClick={() => deleteTask(task.id)}>
-                    Izbriši
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <ReactPaginate
-            previousLabel={"Previous"}
-            nextLabel={"Next"}
-            pageCount={pageCount}
-            onPageChange={changePage}
-            containerClassName={"pagination"}
-            previousLinkClassName={"pagination__link"}
-            nextLinkClassName={"pagination__link"}
-            disabledClassName={"pagination__link--disabled"}
-            activeClassName={"pagination__link--active"}
-          />
-        </div>
+        <TaskForm note={note} content={content} setNote={setNote} setContent={setContent} addTask={addTask} />
+        <TaskList
+          tasks={tasks}
+          pageCount={pageCount}
+          changePage={changePage}
+          edit={edit}
+          sadrzajTaska={sadrzajTaska}
+          naslovTaska={naslovTaska}
+          showModal={showModal}
+          handleCloseModal={handleCloseModal}
+          deleteFunction={deleteFunction}
+          editTask={editTask}
+          editSave={editSave}
+          sortByTitleHandler={sortByTitleHandler}
+          deleteTask={deleteTask}
+        />
       </div>
       <Modal
         edit={edit}
