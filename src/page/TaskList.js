@@ -1,10 +1,11 @@
 import React from "react";
 import ReactPaginate from "react-paginate";
 
-function TaskList({ tasks, pageCount, changePage, editTask, sortByTitleHandler, deleteTask }) {
+function TaskList({ tasks, pageCount, changePage, editTask, sortByTitleHandler, sortByDateHandler, deleteTask }) {
   return (
     <div className="box">
       <button onClick={sortByTitleHandler}>Sortiraj po nazivu</button>
+      <button onClick={sortByDateHandler}>Sortiraj po datumu</button>
       <ul>
         {tasks.map((task, index) => (
           <li className="task_list" key={index}>
@@ -15,6 +16,10 @@ function TaskList({ tasks, pageCount, changePage, editTask, sortByTitleHandler, 
             <p>
               <span className="text-primary">Contect: </span>
               {task.sadrzaj}
+            </p>
+            <p>
+              <span className="text-primary">Datum: </span>
+              {task.datum}
             </p>
             <div className="button_mood">
               <button className="bg-primary" onClick={() => editTask(task.id)}>
