@@ -47,7 +47,7 @@ function Task() {
     const fetchData = async () => {
       const sorted =
         (sortByDate && (sortByDate === "asc" ? "datum" : "-datum")) ||
-        (sortByTitle && (sortByTitle === "asc" ? "task" : "-task"));
+        (sortByTitle ? (sortByTitle === "asc" ? "task" : "-task") : "task");
 
       const response = await axios.get("http://localhost:8000/tasks", {
         params: {
@@ -71,17 +71,30 @@ function Task() {
   const deleteTask = async (index) => {
     setEdit(false);
     handlerModalOpen();
-    const taskToDelete = tasks.find((task) => task.id === index); // ovo je postavljeno samo kako bi se izvukao naziv i sadrzaj od taska
-    // u tasks listi trazi da se poklopi task.id i sa task.id koji je pozvao funkciju
-    setNaslovTaska(taskToDelete.task);
-    setSadrzajTaska(taskToDelete.sadrzaj);
-    setDeleteFunction(() => {
-      const deleteFromDatabase = async () => {
-        await axios.delete(`http://localhost:8000/tasks/${index}`);
+    if (!Array.isArray(index)) {
+      const taskToDelete = tasks.find((task) => task.id === index); // ovo je postavljeno samo kako bi se izvukao naziv i sadrzaj od taska
+      // u tasks listi trazi da se poklopi task.id i sa task.id koji je pozvao funkciju
+      setNaslovTaska(taskToDelete.task);
+      setSadrzajTaska(taskToDelete.sadrzaj);
+      setDeleteFunction(() => {
+        const deleteFromDatabase = async () => {
+          await axios.delete(`http://localhost:8000/tasks/${index}`);
+          handleCloseModal();
+        };
+        return deleteFromDatabase;
+      });
+    } else if (Array.isArray(index) && index.length > 1) {
+      const tasksToDelete = tasks.filter((task) => index.includes(task.id));
+      setNaslovTaska(`Brisanje ${tasksToDelete.length} stavki`);
+      setSadrzajTaska(`Da li ste sigurni da želite da obrišete ${tasksToDelete.length} stavki?`);
+      setDeleteFunction(() => async () => {
+        for (const taskToDelete of tasksToDelete) {
+          await axios.delete(`http://localhost:8000/tasks/${taskToDelete.id}`);
+        }
         handleCloseModal();
-      };
-      return deleteFromDatabase;
-    });
+      });
+    }
+
     setUpdateTask(!updateTask);
   };
 
