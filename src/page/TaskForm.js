@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
-function TaskForm({ setNote, setContent, note, content, setUpdateTask, updateTask}) {
+function TaskForm({ setUpdateTask, updateTask}) {
+
+  const [note, setNote] = useState("");
+  const [content, setContent] = useState("");
 
   const addTask = async (e) => {
 

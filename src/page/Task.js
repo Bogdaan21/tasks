@@ -6,8 +6,6 @@ import TaskList from "./TaskList";
 
 function Task() {
   const [tasks, setTask] = useState([]);
-  const [note, setNote] = useState("");
-  const [content, setContent] = useState("");
 
   const [edit, setEdit] = useState();
 
@@ -128,10 +126,6 @@ function Task() {
     <>
       <div className="container">
         <TaskForm
-          note={note}
-          content={content}
-          setNote={setNote}
-          setContent={setContent}
           updateTask={updateTask}
           setUpdateTask={setUpdateTask}
         />
@@ -142,9 +136,7 @@ function Task() {
           edit={edit}
           sadrzajTaska={sadrzajTaska}
           naslovTaska={naslovTaska}
-          showModal={showModal}
           handleCloseModal={handleCloseModal}
-          deleteFunction={deleteFunction}
           editTask={editTask}
           editSave={editSave}
           sortByTitleHandler={sortByTitleHandler}
