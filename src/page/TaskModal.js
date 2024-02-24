@@ -1,7 +1,16 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
 
-function TaskModal({ naslov, sadrzaj, show, handleClose, editNaslov, editSadrzaj, indexFunction, edit, seteditNaslov, seteditSadrzaj }) {
+function TaskModal({ naslov, sadrzaj, show, handleClose, editNaslov, editSadrzaj, indexFunction, edit, seteditNaslov, seteditSadrzaj, editCheckbox, setEditCheckbox }) {
+
+  const handleCheckboxEdit = async (checkboxName) => {
+    setEditCheckbox((prev) => ({
+      ...prev,
+      [checkboxName]: !prev[checkboxName],
+    }));
+  };
+
+
   return (
     <div>
       <Modal show={show} onHide={handleClose}>
@@ -18,6 +27,23 @@ function TaskModal({ naslov, sadrzaj, show, handleClose, editNaslov, editSadrzaj
               <div>
                 <label htmlFor="editedTask">Novi sadrzaj:</label>
                 <textarea type="text" id="editSadrzaj" className="form-control" value={editSadrzaj} onChange={(e) => seteditSadrzaj(e.target.value)} />
+              </div>
+              <div>
+              <label htmlFor="editedTask">Izmijeni tagove:</label>
+              <div className="checkbox_box">
+            <label className="d-flex align-items-center">
+              Frontend
+              <input type="checkbox" checked={editCheckbox.Front} onChange={() => handleCheckboxEdit("Front")} />
+            </label>
+            <label className="d-flex align-items-center">
+              Backend
+              <input type="checkbox" checked={editCheckbox.Back} onChange={() => handleCheckboxEdit("Back")} />
+            </label>
+            <label className="d-flex align-items-center">
+              Database
+              <input type="checkbox" checked={editCheckbox.Database} onChange={() => handleCheckboxEdit("Database")} />
+            </label>
+          </div>
               </div>
             </>
           ) : (

@@ -3,12 +3,13 @@ import ReactPaginate from "react-paginate";
 
 function TaskList({ tasks, pageCount, changePage, editTask, sortByTitleHandler, sortByDateHandler, deleteTask }) {
   const [selectedTasks, setSelectedTasks] = useState([]);
+  const [selectedOption, setSelectedOption] = useState("");
 
   const handleSelectTask = (taskId) => {
     const isSelected = selectedTasks.includes(taskId); // true ako ima id false ako nema - include
 
     if (isSelected) {
-      setSelectedTasks(selectedTasks.filter((id) => id !== taskId)); // odselektovati stavku 
+      setSelectedTasks(selectedTasks.filter((id) => id !== taskId)); // odselektovati stavku
     } else {
       setSelectedTasks([...selectedTasks, taskId]); // selektovati stavku
     }
@@ -21,16 +22,34 @@ function TaskList({ tasks, pageCount, changePage, editTask, sortByTitleHandler, 
     // i refresh
   };
 
+  const handleChange = (e) => {
+    setSelectedOption(e.target.value);
+    console.log(e.target.value);
+  };
+
   return (
     <div className="box">
-      <button onClick={sortByTitleHandler}>Sortiraj po nazivu</button>
-      <button onClick={sortByDateHandler}>Sortiraj po datumu</button>
-      {selectedTasks.length > 1 && (
-        <button className="bg-danger" onClick={handleDeleteSelected}>
-          Obriši selektovane
-        </button>
-      )}
+      <div className="d-flex justify-content-between">
+        <div>
+          <button onClick={sortByTitleHandler}>Sortiraj po nazivu</button>
+          <button onClick={sortByDateHandler}>Sortiraj po datumu</button>
+          {selectedTasks.length > 1 && (
+            <button className="bg-danger" onClick={handleDeleteSelected}>
+              Obriši selektovane
+            </button>
+          )}
+        </div>
 
+        <div>
+          <label htmlFor="selectOption">Ptretrazi po:</label>
+          <select id="selectOption" value={selectedOption} onChange={handleChange}>
+            <option value=""></option>
+            <option value="Frontend">Frontend</option>
+            <option value="Backend">Backend</option>
+            <option value="Database">Database</option>
+          </select>
+        </div>
+      </div>
       <ul>
         {tasks.map((task, index) => (
           <li className="task_list" key={index}>
@@ -49,6 +68,17 @@ function TaskList({ tasks, pageCount, changePage, editTask, sortByTitleHandler, 
               <span className="text-primary">Contect: </span>
               {task.sadrzaj}
             </p>
+            <p className="tag_box">
+              {Object.entries(task.tag).map(
+                ([tagName, tagValue], index) =>
+                  tagValue && (
+                    <span className="tag_text" key={index}>
+                      {tagName}
+                    </span>
+                  )
+              )}
+            </p>
+
             <p>
               <span className="text-primary">Datum: </span>
               {task.datum}

@@ -11,6 +11,7 @@ function Task() {
 
   const [editNaslov, setEditNaslov] = useState("");
   const [editSadrzaj, setEditSadrzaj] = useState("");
+  const [editCheckbox, setEditCheckbox] = useState({});
   const [editedIndex, setEditedIndex] = useState(null);
 
   const [naslovTaska, setNaslovTaska] = useState("");
@@ -102,11 +103,12 @@ function Task() {
     setEdit(true);
     setEditNaslov(taskToEdit.task);
     setEditSadrzaj(taskToEdit.sadrzaj);
+    await setEditCheckbox(taskToEdit.tag);
     handlerModalOpen();
   };
 
   const editSave = async () => {
-    await axios.put(`http://localhost:8000/tasks/${editedIndex}`, { task: editNaslov, sadrzaj: editSadrzaj });
+    await axios.put(`http://localhost:8000/tasks/${editedIndex}`, { task: editNaslov, sadrzaj: editSadrzaj, tag: editCheckbox });
     handleCloseModal();
     setEdit(false);
     setUpdateTask(!updateTask);
@@ -155,6 +157,8 @@ function Task() {
         editSadrzaj={editSadrzaj}
         seteditNaslov={setEditNaslov}
         seteditSadrzaj={setEditSadrzaj}
+        setEditCheckbox={setEditCheckbox}
+        editCheckbox={editCheckbox}
       />
     </>
   );
