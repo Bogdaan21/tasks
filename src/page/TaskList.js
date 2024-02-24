@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import ReactPaginate from "react-paginate";
 
-function TaskList({ tasks, pageCount, changePage, editTask, sortByTitleHandler, sortByDateHandler, deleteTask }) {
+function TaskList({
+  tasks,
+  pageCount,
+  changePage,
+  editTask,
+  sortByTitleHandler,
+  sortByDateHandler,
+  deleteTask,
+  filteredSelect,
+}) {
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
 
@@ -24,7 +33,11 @@ function TaskList({ tasks, pageCount, changePage, editTask, sortByTitleHandler, 
 
   const handleChange = (e) => {
     setSelectedOption(e.target.value);
-    console.log(e.target.value);
+    if (e.target.value) {
+      const filtered = tasks.filter((task) => task.tag[e.target.value]);
+      filteredSelect(filtered);
+      console.log(filtered);
+    }
   };
 
   return (
@@ -44,8 +57,8 @@ function TaskList({ tasks, pageCount, changePage, editTask, sortByTitleHandler, 
           <label htmlFor="selectOption">Ptretrazi po:</label>
           <select id="selectOption" value={selectedOption} onChange={handleChange}>
             <option value=""></option>
-            <option value="Frontend">Frontend</option>
-            <option value="Backend">Backend</option>
+            <option value="Front">Frontend</option>
+            <option value="Back">Backend</option>
             <option value="Database">Database</option>
           </select>
         </div>

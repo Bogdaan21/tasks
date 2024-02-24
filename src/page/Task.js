@@ -42,6 +42,11 @@ function Task() {
     setShowModal(false);
   };
 
+  const filteredSelect = async (filtered) => {
+    setTask(filtered);
+     await setUpdateTask(!updateTask);
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       const sorted =
@@ -144,6 +149,7 @@ function Task() {
           sortByTitleHandler={sortByTitleHandler}
           sortByDateHandler={sortByDateHandler}
           deleteTask={deleteTask}
+          filteredSelect={filteredSelect}
         />
       </div>
       <Modal

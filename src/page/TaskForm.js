@@ -5,9 +5,9 @@ function TaskForm({ setUpdateTask, updateTask }) {
   const [note, setNote] = useState("");
   const [content, setContent] = useState("");
   const [tag, setTag] = useState({
-    Front: '',
-    Back: '',
-    Database: '',
+    Front: false,
+    Back: false,
+    Database: false,
   });
 
   const addTask = async (e) => {
